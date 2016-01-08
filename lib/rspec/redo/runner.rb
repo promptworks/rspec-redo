@@ -2,33 +2,23 @@ require 'rspec/redo/rake_task'
 
 module RSpec::Redo
   class Runner
-    REDO_ARGS = %w(retry-count)
-
     class << self
-      def invoke(args = ARGV)
-        parsed = parse(args)
-        new(*parsed).invoke
+      def invoke(args = ARGV.dup)
+        opts = extract!(args)
+        new(args, opts).invoke
       end
 
       private
 
-      def parse(args)
-        rspec_opts, redo_opts = [], {}
-        redo_opts = {}
-
-        args.each.with_index do |arg, i|
-          redo_opt_name = REDO_ARGS.find do |pos|
-            i > 0 && args[i - 1] == "--#{pos}"
-          end
-
-          if redo_opt_name
-            redo_opts[redo_opt_name] = arg
-          elsif REDO_ARGS.none? { |pos| arg == "--#{pos}" }
-            rspec_opts << arg
+      def extract!(args)
+        {}.tap do |opts|
+          if index = args.index('--retry-count')
+            opts['retry-count'] = Integer(args.delete_at(index + 1))
+            args.delete_at(index)
           end
         end
-
-        [rspec_opts, redo_opts]
+      rescue ArgumentError
+        abort '--retry-count must be an integer'
       end
     end
 
@@ -38,10 +28,7 @@ module RSpec::Redo
     def initialize(rspec_opts, redo_opts = {})
       @rspec_opts = rspec_opts
       @redo_opts = redo_opts
-      @retry_count = redo_opts.fetch('retry-count', 1)
-      @total_retries = @retry_count = Integer(@retry_count)
-    rescue ArgumentError
-      abort '--retry-count must be an integer'
+      @total_retries = @retry_count = redo_opts.fetch('retry-count', 1)
     end
 
     def invoke
@@ -53,7 +40,7 @@ module RSpec::Redo
     private
 
     def run(*extra_opts)
-      system 'rspec', *rspec_opts, *extra_opts
+      system('rspec', *rspec_opts, *extra_opts)
     end
 
     def rerun

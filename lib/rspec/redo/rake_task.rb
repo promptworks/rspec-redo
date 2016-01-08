@@ -15,10 +15,14 @@ module RSpec::Redo
       end
     end
 
+    # @override
+    # Swap out RSpec for the Redo CLI
     def rspec_path
       RSPEC_REDO_PATH
     end
 
+    # @override
+    # Include the retry_count if it's provided
     def rspec_opts
       return super unless retry_count
       [*super, '--retry-count', retry_count]
@@ -27,6 +31,7 @@ module RSpec::Redo
     private
 
     # @override
+    # We don't need to require rspec libs for this command
     def rspec_load_path
     end
   end
