@@ -1,6 +1,4 @@
-# RSpec::Redo
-
-The absolute simplest way to retry flakey specs using built-in RSpec functionality.
+# RSpec Redo
 
 In RSpec 3.3, the `--only-failures` option was added. This means you can have RSpec dump the failures to a file, and rerun them.
 
@@ -9,7 +7,7 @@ In RSpec 3.3, the `--only-failures` option was added. This means you can have RS
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'rspec_redo'
+gem 'rspec-redo'
 ```
 
 And then execute:
@@ -18,11 +16,11 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install rspec_redo
+    $ gem install rspec-redo
 
 ## Usage
 
-First, you'll need to tell RSpec where to save the list of failed examples. If you're in a Rails app, `tmp` is probably a good place. Otherwise, just make sure you add the file to your `.gitignore` file.
+First, you'll need to tell RSpec where to persist a list of failed examples. To do this, you'll have to add a line to your `spec_helper.rb`. You'll want to add this file to your `.gitignore`.
 
 ```ruby
 RSpec.configure do |c|
@@ -42,16 +40,44 @@ You can also pass options you'd typically pass to RSpec. For example:
 $ rspec-redo spec/models/person_spec.rb --format doc
 ```
 
-## Development
+By default, the program will retry failed specs only once. You can retry multiple times like so:
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake false` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```shell
+$ rspec-redo --retry-count 5
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+## Rake Integration
+
+RSpec Redo includes a build in Rake task generator. To create a new Rake task, add the following to your Rakefile:
+
+```ruby
+require 'rspec-redo/rake_task'
+RSpecRedo::RakeTask.new 'spec:redo'
+```
+
+Cool, now you can run:
+
+```shell
+$ rake spec:redo
+```
+
+You can customize the command by providing a block:
+
+```ruby
+RSpecRedo::RakeTask.new 'spec:redo:models' do |t|
+  t.pattern = 'spec/models/*_spec.rb'
+end
+```
+
+Read [RSpec's documentation](http://www.rubydoc.info/gems/rspec-core/RSpec/Core/RakeTask) for available options.
 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rspec_redo.
 
+## Thanks
+
+Inspired by `rspec-rerun`.
 
 ## License
 
