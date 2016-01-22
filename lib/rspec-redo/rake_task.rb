@@ -1,13 +1,17 @@
 require 'rspec/core/rake_task'
 
-module RSpec::Redo
+module RSpecRedo
   class RakeTask < ::RSpec::Core::RakeTask
-    RSPEC_REDO_PATH = File.expand_path('../../../../bin/rspec-redo', __FILE__)
+    RSPEC_REDO_PATH = File.expand_path('../../../bin/rspec-redo', __FILE__)
 
     attr_accessor :retry_count
 
     def initialize(name = 'spec:redo', *args, &block)
       @retry_count = ENV['RETRY_COUNT']
+
+      unless ::Rake.application.last_comment
+        desc 'Run RSpec code examples with RSpecRedo'
+      end
 
       super(name, :retry_count, *args) do |t, args|
         @retry_count = args.retry_count

@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'rspec/redo/version'
+require 'rspec-redo/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "rspec-redo"
-  spec.version       = RSpec::Redo::VERSION
+  spec.version       = RSpecRedo::VERSION
   spec.authors       = ["Ray Zane"]
-  spec.email         = ["raymondzane@gmail.com"]
+  spec.email         = ["ray@promptworks.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{Rerun RSpec failures}
+  spec.description   = %q{Rerun RSpec failures using RSpec 3.3.0's built-in --only-failures option}
+  spec.homepage      = "http://promptworks.com"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
@@ -31,4 +31,5 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "simplecov"
 end

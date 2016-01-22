@@ -1,4 +1,6 @@
 require 'open3'
+require 'simplecov'
+SimpleCov.start
 
 module IntegrationHelpers
   ROOT = File.expand_path('../..', __FILE__)
@@ -27,8 +29,21 @@ module IntegrationHelpers
   end
 end
 
+module StreamHelpers
+  def silence_stream(stream)
+    old_stream = stream.dup
+    stream.reopen(RbConfig::CONFIG['host_os'] =~ /mswin|mingw/ ? 'NUL:' : '/dev/null')
+    stream.sync = true
+    yield
+  ensure
+    stream.reopen(old_stream)
+    old_stream.close
+  end
+end
+
 RSpec.configure do |config|
   config.color = true
+  config.include StreamHelpers
   config.include IntegrationHelpers, type: :integration
 
   config.expect_with :rspec do |expectations|

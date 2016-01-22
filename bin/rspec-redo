@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 
-require 'rspec/redo/runner'
-RSpec::Redo::Runner.invoke
+require 'rspec-redo/runner'
+RSpecRedo::Runner.invoke

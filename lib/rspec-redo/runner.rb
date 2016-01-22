@@ -1,6 +1,6 @@
-require 'rspec/redo/rake_task'
+require 'rspec-redo/rake_task'
 
-module RSpec::Redo
+module RSpecRedo
   class Runner
     class << self
       def invoke(args = ARGV.dup)
