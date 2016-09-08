@@ -39,14 +39,16 @@ module RSpecRedo
 
     private
 
-    def run(*extra_opts)
-      system('rspec', *rspec_opts, *extra_opts)
+    def run(args: [], env: ENV)
+      system(env, 'rspec', *rspec_opts, *args)
     end
 
     def rerun
       $stderr.puts "*** Failures occurred. Attempting #{retry_count} more time(s)...\n\n"
       self.retry_count -= 1
-      run '--only-failures'
+
+      env = ENV.clone.tap { |e| e.store 'RSPEC_REDO', '1' }
+      run env: env, args: ['--only-failures']
     end
 
     def abort!
