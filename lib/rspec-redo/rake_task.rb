@@ -9,12 +9,12 @@ module RSpecRedo
     def initialize(name = 'spec:redo', *args, &block)
       @retry_count = ENV['RETRY_COUNT']
 
-      unless ::Rake.application.last_comment
+      unless ::Rake.application.last_description
         desc 'Run RSpec code examples with RSpecRedo'
       end
 
-      super(name, :retry_count, *args) do |t, args|
-        @retry_count = args.retry_count
+      super(name, :retry_count, *args) do |t, opts|
+        @retry_count = opts.retry_count
         yield self if block_given?
       end
     end
